@@ -1,24 +1,17 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
-import { styles } from './styles';
-
-import CirculoMagico from './src/assets/images/CirculoMagico.png';
+import { BottomTabNavigator } from './src/routes/BottomTabNavigator';
+import { StatusBar } from 'expo-status-bar';
 
 const App = () => {
 
-	return <View style={styles.container}>
-		<Text style={styles.title}>
-			Fred
-		</Text>
-		<TouchableOpacity activeOpacity={0.7}>
-			<Image style={styles.image} source={CirculoMagico} />
-		</TouchableOpacity>
-		<TextInput
-			placeholder='Fred esteve aqui'
-			placeholderTextColor='#555'
-			style={styles.input}
+	return <>
+		<StatusBar
+			hidden={false}
+			translucent={true}
+			style='light'
 		/>
-	</View>;
+		<BottomTabNavigator />
+	</>
 }
 
 export default App;
