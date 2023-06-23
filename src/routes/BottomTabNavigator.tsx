@@ -4,15 +4,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Skills } from '../screens/Skills';
 import { Shop } from '../screens/Shop';
+import { Carrinho } from '../screens/Carrinho';
 
 import ShopIcon from '../assets/icons/storefront_FILL0_wght400_GRAD0_opsz48.png';
 import SkillsIcon from '../assets/icons/fact_check_FILL0_wght400_GRAD0_opsz48.png';
+import CartIcon from '../assets/icons/shopping_cart_FILL0_wght400_GRAD0_opsz48.png';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export type RootTabParamList = {
 	Skills: undefined;
 	Shop: undefined;
+	Carrinho: undefined;
 }
 
 export const BottomTabNavigator = () => {
@@ -56,6 +59,20 @@ export const BottomTabNavigator = () => {
 					}}
 					name="Shop"
 					component={Shop}
+				/>
+				<Tab.Screen
+					options={{
+						tabBarIcon: ({ color }) => (
+							<Image
+								resizeMode='contain'
+								source={CartIcon}
+								style={{ tintColor: color, width: 30 }}
+							/>
+
+						)
+					}}
+					name="Carrinho"
+					component={Carrinho}
 				/>
 			</Tab.Navigator>
 		</NavigationContainer>

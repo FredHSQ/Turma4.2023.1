@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Modal, ModalProps, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { styles } from "./styles";
 
 import CloseIcon from "../../assets/icons/close_FILL0_wght400_GRAD0_opsz48.png"
-import { ItemStatus, getItemStatus } from "../../services/api";
+import { ItemStatus, getItemStatus, listaDeItensMagicosProps } from "../../services/api";
+import { ContextCart } from "../../context/contextCart";
+import { Button } from "../Button";
 
 interface ModalStatusProps extends ModalProps {
 	modal: boolean,
 	index: string;
 	setModal: React.Dispatch<React.SetStateAction<boolean>>;
+	precoSelecionado?: number
 }
 
-export const ModalStatus = ({ modal, setModal, index, ...rest }: ModalStatusProps) => {
+export const ModalStatus = ({ modal, setModal, index, precoSelecionado, ...rest }: ModalStatusProps) => {
 
 	const [itemStatus, setItemStatus] = useState<ItemStatus>();
 	const [loading, setLoading] = useState<boolean>(true);
@@ -20,15 +23,33 @@ export const ModalStatus = ({ modal, setModal, index, ...rest }: ModalStatusProp
 		setLoading(true);
 		getItemStatus({ index }).then(algumaCoisa => {
 			setItemStatus(algumaCoisa.data);
-			console.log(algumaCoisa.data.desc);
-
 		}).finally(() => {
 			setLoading(false)
 		})
 	}, []);
 
-	function precoRandomico() {
+	const { adcionaItemAListaDeItensMagicos, retiraItemDaListaDeItensMagicos } = useContext(ContextCart);
+
+	function gerarPrecoRandomico() {
 		return Math.floor(Math.random() * 10000);
+	}
+
+	function retiraItem(){
+		retiraItemDaListaDeItensMagicos(index)
+		setModal(false);
+	}
+
+	const precoRandomico = gerarPrecoRandomico();
+
+	function botaItemNoCarrinho() {
+		let itemProvisorio: listaDeItensMagicosProps = {
+			index: itemStatus.index,
+			name: itemStatus.name,
+			url: itemStatus.url,
+			preco: precoRandomico
+		}
+		adcionaItemAListaDeItensMagicos(itemProvisorio);
+		setModal(false);
 	}
 
 	return <Modal
@@ -87,7 +108,7 @@ export const ModalStatus = ({ modal, setModal, index, ...rest }: ModalStatusProp
 										Preço:
 									</Text>
 									<Text style={styles.text}>
-										R$ {precoRandomico()}
+										R$ {precoSelecionado ? precoSelecionado : precoRandomico}
 									</Text>
 								</View>
 							</View>
@@ -105,7 +126,7 @@ export const ModalStatus = ({ modal, setModal, index, ...rest }: ModalStatusProp
 										Informações adicionais:
 									</Text>
 									<Text style={styles.text}>
-										{itemStatus.desc.map((text,index)=>{
+										{itemStatus.desc.map((text, index) => {
 											if (index > 1)
 												return text
 										})}
@@ -113,6 +134,17 @@ export const ModalStatus = ({ modal, setModal, index, ...rest }: ModalStatusProp
 								</View>
 							}
 						</ScrollView>
+						{precoSelecionado ?
+							<Button
+								title="Retira do carrinho"
+								onPress={retiraItem}
+							/>
+							:
+							<Button
+								title="Adicionar ao carrinho"
+								onPress={botaItemNoCarrinho}
+							/>
+						}
 					</>
 				}
 			</View>

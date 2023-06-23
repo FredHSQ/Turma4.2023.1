@@ -13,6 +13,7 @@ export interface listaDeItensMagicosProps {
 	index: string,
 	name: string,
 	url: string,
+	preco?: number
 }
 
 export function getItensMagicos(): Promise<AxiosResponse<resposeGetItensMagicos, any>> {
@@ -33,6 +34,7 @@ export interface ItemStatus {
 	rarity: Rarity;
 	variant: boolean;
 	variants?: any[] | null;
+	url: string;
 }
 
 export interface EquipmentCategory {
